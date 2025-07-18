@@ -5,6 +5,7 @@
  * Qihan Zhang - qz192
  * Luke Spivak - ljs302
  * Stephen Eggly - sre71
+ * Rajesh Sannidhi - drag00n
  * 
  * This cache simulator takes a valgrind memory trace as input,
  * simulates the hit/miss behavior of a cache memory on this trace,

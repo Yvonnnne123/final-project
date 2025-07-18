@@ -15,7 +15,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <math.h>
 
 int s = 0;
 int E = 0;
@@ -47,6 +46,7 @@ void printUsage(char *argv[]);
 
 int main(int argc, char *argv[]) {
     int opt;
+    
     while ((opt = getopt(argc, argv, "hvs:E:b:t:")) != -1) {
         switch (opt) {
             case 'h':
@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
-    S = (int)pow(2.0, (double)s);
-    B = (int)pow(2.0, (double)b);
+    S = 1 << s;
+    B = 1 << b;
     
     initCache();
     
@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
 
 void initCache(void) {
     int i, j;
+    
     cache = malloc(S * sizeof(cache_line_t*));
     if (cache == NULL) {
         fprintf(stderr, "Error: Memory allocation failed\n");
@@ -116,11 +117,12 @@ void initCache(void) {
         }
     }
     
-    set_index_mask = (unsigned long)pow(2.0, (double)s) - 1;
+    set_index_mask = (1 << s) - 1;
 }
 
 void freeCache(void) {
     int i;
+    
     for (i = 0; i < S; i++) {
         free(cache[i]);
     }
@@ -149,8 +151,10 @@ void accessData(unsigned long address) {
             if (verbosity) {
                 printf(" hit");
             }
+            
             lru_counter++;
             set[i].lru_counter = lru_counter;
+            
             return;
         }
     }

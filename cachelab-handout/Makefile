@@ -1,5 +1,4 @@
-# all: csim ctuner
-all: csim
+all: csim ctuner
 
 csim: csim.c
 	gcc -o csim csim.c

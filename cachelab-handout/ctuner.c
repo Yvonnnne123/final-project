@@ -3,6 +3,7 @@
  * Group Members:
  * Luke Spivak - ljs302
  * Qihan Zhang - qz192
+ * Stephen Eggly - sre71
  */
 
 #include <stdio.h>

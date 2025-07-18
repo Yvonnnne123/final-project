@@ -135,8 +135,7 @@ void accessData(unsigned long address) {
     unsigned long set_index, tag;
     cache_line_t *set;
     int lru_line = 0;
-    unsigned long oldest_lru = 0;
-    int first_iteration = 1;
+    unsigned long oldest_lru = (unsigned long)-1;
     
     set_index = (address >> b) & set_index_mask;
     
@@ -152,8 +151,9 @@ void accessData(unsigned long address) {
                 printf(" hit");
             }
             
+            unsigned long old_lru = lru_counter;
             lru_counter++;
-            set[i].lru_counter = lru_counter;
+            set[i].lru_counter = old_lru;
             
             return;
         }
@@ -166,10 +166,13 @@ void accessData(unsigned long address) {
     }
     
     for (i = 0; i < E; i++) {
-        if (first_iteration || set[i].lru_counter > oldest_lru) {
+        if (!set[i].valid) {
+            lru_line = i;
+            break;
+        }
+        if (oldest_lru > set[i].lru_counter) {
             oldest_lru = set[i].lru_counter;
             lru_line = i;
-            first_iteration = 0;
         }
     }
     
@@ -184,8 +187,9 @@ void accessData(unsigned long address) {
     set[lru_line].valid = 1;
     set[lru_line].tag = tag;
     
+    unsigned long old_lru = lru_counter;
     lru_counter++;
-    set[lru_line].lru_counter = lru_counter;
+    set[lru_line].lru_counter = old_lru;
 }
 
 void replayTrace(char *filename) {
